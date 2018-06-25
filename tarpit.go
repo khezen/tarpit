@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Interface - tarpit interface
+// Interface -
 // call Handle(w http.ResponseWriter, r *http.Request) if you want to tarpit an incoming connection.
 type Interface interface {
 	Handle(w http.ResponseWriter, r *http.Request) error
