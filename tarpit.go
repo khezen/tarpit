@@ -18,13 +18,12 @@ type Interface interface {
 // you can disable this feature by setting chunkPeriod to <= 0;
 // Once a given resources is not called from a given IP for more than resetPeriod, then the delay is reset.
 func New(delay, chunkPeriod, resetPeriod time.Duration) Interface {
-	cleanupPeriod := 15 * time.Minute
 	tarpit := tarpit{
 		unitDelay:   delay,
 		chunkPeriod: chunkPeriod,
 		isClosed:    false,
 		close:       make(chan struct{}),
-		monitoring:  newMonitoring(resetPeriod, cleanupPeriod),
+		monitoring:  newMonitoring(resetPeriod, defaultCleanupPeriod),
 	}
 	go tarpit.monitoring.cleaner(tarpit.close)
 	return &tarpit
