@@ -2,7 +2,6 @@ package tarpit
 
 import (
 	"bufio"
-	"errors"
 	"net"
 	"net/http"
 )
@@ -22,11 +21,6 @@ func getCallerIP(r *http.Request) string {
 func getURI(r *http.Request) string {
 	return r.URL.RawPath
 }
-
-var (
-	// ErrHijackingUnsupported - webserver doesn't support hijacking
-	ErrHijackingUnsupported = errors.New("ErrHijackingUnsupported - webserver doesn't support hijacking")
-)
 
 func hijack(w http.ResponseWriter) (net.Conn, *bufio.ReadWriter, error) {
 	if f, ok := w.(http.Flusher); ok {

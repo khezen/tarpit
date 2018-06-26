@@ -1,13 +1,9 @@
 package tarpit
 
 import (
-	"errors"
 	"net/http"
 	"time"
 )
-
-// ErrClosedTarpit -
-var ErrClosedTarpit = errors.New("ErrClosedTarpit")
 
 // Interface -
 // call Handle(w http.ResponseWriter, r *http.Request) if you want to tarpit an incoming connection.
