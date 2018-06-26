@@ -27,7 +27,7 @@ func New(delay, chunkPeriod, resetPeriod time.Duration) Interface {
 		chunkPeriod: chunkPeriod,
 		isClosed:    false,
 		close:       make(chan struct{}),
-		monitoring:  newMonitoring(resetPeriod, 15*time.Minute),
+		monitoring:  newMonitoring(resetPeriod, 5*time.Minute),
 	}
 	go tarpit.monitoring.cleaner(tarpit.close)
 	return &tarpit
