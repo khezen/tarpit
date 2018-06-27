@@ -6,9 +6,9 @@ import (
 )
 
 // Interface -
-// call Handle(w http.ResponseWriter, r *http.Request) if you want to tarpit an incoming connection.
+// call Tar(w http.ResponseWriter, r *http.Request) if you want to tarpit an incoming connection.
 type Interface interface {
-	Handle(w http.ResponseWriter, r *http.Request) error
+	Tar(w http.ResponseWriter, r *http.Request) error
 	Close()
 }
 
@@ -37,7 +37,7 @@ type tarpit struct {
 	monitoring  monitoring
 }
 
-func (t *tarpit) Handle(w http.ResponseWriter, r *http.Request) error {
+func (t *tarpit) Tar(w http.ResponseWriter, r *http.Request) error {
 	if t.isClosed {
 		return ErrClosedTarpit
 	}
@@ -55,7 +55,7 @@ func (t *tarpit) Handle(w http.ResponseWriter, r *http.Request) error {
 	}
 	var timer *time.Timer
 	for {
-		if remainingDuration > t.chunkPeriod {
+		if t.chunkPeriod > 0 && remainingDuration > t.chunkPeriod {
 			timer = time.NewTimer(t.chunkPeriod)
 		} else {
 			timer = time.NewTimer(remainingDuration)
