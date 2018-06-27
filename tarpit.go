@@ -44,8 +44,8 @@ func (t *tarpit) Handle(w http.ResponseWriter, r *http.Request) error {
 	ip := getCallerIP(r)
 	uri := getURI(r)
 	defer t.monitoring.increment(ip, uri)
-	rec := t.monitoring.get(ip, uri)
-	delay := time.Duration(rec.count) * t.unitDelay
+	calls := t.monitoring.get(ip, uri)
+	delay := time.Duration(calls.count) * t.unitDelay
 	if delay == 0 {
 		return nil
 	}
