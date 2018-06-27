@@ -45,11 +45,10 @@ func (t *tarpit) Handle(w http.ResponseWriter, r *http.Request) error {
 	uri := getURI(r)
 	defer t.monitoring.increment(ip, uri)
 	calls := t.monitoring.get(ip, uri)
-	delay := time.Duration(calls.count) * t.unitDelay
-	if delay == 0 {
+	remainingDuration := time.Duration(calls.count) * t.unitDelay
+	if remainingDuration == 0 {
 		return nil
 	}
-	remainingDuration := delay
 	con, _, err := hijack(w)
 	if err != nil {
 		return err
@@ -62,12 +61,12 @@ func (t *tarpit) Handle(w http.ResponseWriter, r *http.Request) error {
 			timer = time.NewTimer(remainingDuration)
 		}
 		<-timer.C
-		// write a byte to prevent client timeout
-		con.Write([]byte(" "))
 		remainingDuration = remainingDuration - t.chunkPeriod
 		if remainingDuration <= 0 {
 			return nil
 		}
+		// write a byte to prevent client timeout
+		con.Write([]byte(" "))
 	}
 }
 
