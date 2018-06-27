@@ -32,12 +32,6 @@ func (i *ipAddresses) get(ip string) *resources {
 	return resources
 }
 
-func (i *ipAddresses) delete(ip string) {
-	i.Lock()
-	defer i.Unlock()
-	delete(i.records, ip)
-}
-
 func (i *ipAddresses) cleanup() {
 	i.Lock()
 	defer i.Unlock()
