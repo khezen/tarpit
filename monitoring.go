@@ -9,15 +9,14 @@ type record struct {
 }
 
 type monitoring struct {
-	resetPeriod, cleanupPeriod time.Duration
-	records                    ipAddresses
+	resetPeriod time.Duration
+	records     ipAddresses
 }
 
-func newMonitoring(resetPeriod, cleanupPeriod time.Duration) monitoring {
+func newMonitoring(resetPeriod time.Duration) monitoring {
 	return monitoring{
-		cleanupPeriod: cleanupPeriod,
-		resetPeriod:   resetPeriod,
-		records:       newstringAddresses(),
+		resetPeriod: resetPeriod,
+		records:     newstringAddresses(),
 	}
 }
 
@@ -40,8 +39,8 @@ func (m *monitoring) increment(ip, uri string) {
 	}
 }
 
-func (m *monitoring) cleaner(stop chan struct{}) {
-	ticker := time.NewTicker(m.cleanupPeriod)
+func (m *monitoring) cleaner(cleanupPeriod time.Duration, stop chan struct{}) {
+	ticker := time.NewTicker(cleanupPeriod)
 	for {
 		select {
 		case <-ticker.C:
