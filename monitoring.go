@@ -9,14 +9,14 @@ type record struct {
 }
 
 type monitoring struct {
-	keepAlive, cleanupPeriod time.Duration
-	records                  ipAddresses
+	resetPeriod, cleanupPeriod time.Duration
+	records                    ipAddresses
 }
 
-func newMonitoring(keepAlive, cleanupPeriod time.Duration) monitoring {
+func newMonitoring(resetPeriod, cleanupPeriod time.Duration) monitoring {
 	return monitoring{
 		cleanupPeriod: cleanupPeriod,
-		keepAlive:     keepAlive,
+		resetPeriod:   resetPeriod,
 		records:       newstringAddresses(),
 	}
 }
@@ -32,7 +32,7 @@ func (m *monitoring) get(ip, uri string) record {
 func (m *monitoring) increment(ip, uri string) {
 	resources := m.records.get(ip)
 	if resources == nil {
-		resources := newResources(m.keepAlive)
+		resources := newResources(m.resetPeriod)
 		resources.increment(uri)
 		m.records.put(ip, resources)
 	} else {

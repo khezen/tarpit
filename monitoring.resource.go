@@ -7,14 +7,14 @@ import (
 
 type resources struct {
 	sync.Mutex
-	keepAlive time.Duration
-	records   map[string]record
+	resetPeriod time.Duration
+	records     map[string]record
 }
 
-func newResources(keepAlive time.Duration) *resources {
+func newResources(resetPeriod time.Duration) *resources {
 	return &resources{
 		sync.Mutex{},
-		keepAlive,
+		resetPeriod,
 		make(map[string]record),
 	}
 }
@@ -44,7 +44,7 @@ func (r *resources) get(uri string) record {
 	if !ok {
 		return record{}
 	}
-	if rec.count > 0 && rec.latestAt.UnixNano()+int64(r.keepAlive) <= now.UnixNano() {
+	if rec.count > 0 && rec.latestAt.UnixNano()+int64(r.resetPeriod) <= now.UnixNano() {
 		delete(r.records, uri)
 		return record{}
 	}
@@ -57,7 +57,7 @@ func (r *resources) cleanup() (isEmpty bool) {
 	r.Lock()
 	defer r.Unlock()
 	for uri, rec := range r.records {
-		if rec.latestAt.UnixNano()+int64(r.keepAlive) <= now.UnixNano() {
+		if rec.latestAt.UnixNano()+int64(r.resetPeriod) <= now.UnixNano() {
 			delete(r.records, uri)
 		} else {
 			isEmpty = false
