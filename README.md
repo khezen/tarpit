@@ -46,7 +46,6 @@ func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
 func main() {
     http.HandleFunc("/drugs-store/v1/health", handleHealthCheck)
     http.HandleFunc("/drugs-store/v1/medicine", handleGetMedicine)
-
     writeTimeout := time.Hour
     err := tarpit.ListenAndServe(":80", nil, writeTimeout)
     if err != nil {
