@@ -20,17 +20,25 @@ import (
 var tarpitMiddleware = tarpit.New(tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
 
 func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
+      if r.Method != http.MethodGet{
+         w.WriteHeader(http.StatusMethodNotAllowed)
+         return
+    }
     w.Write([]byte("OK"))
 }
 
 func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodGet{
+         w.WriteHeader(http.StatusMethodNotAllowed)
+         return
+    }
     err := tarpitMiddleware.Tar(w, r)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(err.Error()))
-    } else {
-        w.Write([]byte("Here are your pills"))
+        return
     }
+    w.Write([]byte("Here are your pills"))
 }
 
 func main() {
