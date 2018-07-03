@@ -1,6 +1,7 @@
 package tarpit
 
 import (
+	"errors"
 	"net/http"
 	"time"
 )
@@ -11,6 +12,19 @@ type Interface interface {
 	Tar(w http.ResponseWriter, r *http.Request) error
 	Close()
 }
+
+var (
+	// ErrClosedTarpit -
+	ErrClosedTarpit = errors.New("ErrClosedTarpit")
+)
+
+const (
+	// DefaultDelay - 1s
+	DefaultDelay = time.Second
+	// DefaultResetPeriod - 1m
+	DefaultResetPeriod   = time.Minute
+	defaultCleanupPeriod = 5 * time.Minute
+)
 
 // New creates a new tarpit interface - delay is the unit period used to delay incoming connections.
 // Repeted calls to the same resource from the same IP multiply this value;
