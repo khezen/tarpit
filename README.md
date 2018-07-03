@@ -6,6 +6,8 @@
 * repeted calls to a given resource increase the delay
 * enable TCP keep alive to keep the client from timing out
 
+One typical use case is to protect authentication from brute force.
+
 ## example
 
 ```golang
