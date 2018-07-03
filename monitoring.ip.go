@@ -6,23 +6,23 @@ import (
 
 type ipAddresses struct {
 	sync.RWMutex
-	records map[string]*resources
+	records map[ipAddress]*resources
 }
 
 func newstringAddresses() ipAddresses {
 	return ipAddresses{
 		sync.RWMutex{},
-		make(map[string]*resources),
+		make(map[ipAddress]*resources),
 	}
 }
 
-func (i *ipAddresses) put(ip string, resources *resources) {
+func (i *ipAddresses) put(ip ipAddress, resources *resources) {
 	i.Lock()
 	defer i.Unlock()
 	i.records[ip] = resources
 }
 
-func (i *ipAddresses) get(ip string) *resources {
+func (i *ipAddresses) get(ip ipAddress) *resources {
 	i.RLock()
 	defer i.RUnlock()
 	resources, ok := i.records[ip]

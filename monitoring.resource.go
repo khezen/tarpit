@@ -8,18 +8,18 @@ import (
 type resources struct {
 	sync.Mutex
 	resetPeriod time.Duration
-	records     map[string]record
+	records     map[resourcePath]record
 }
 
 func newResources(resetPeriod time.Duration) *resources {
 	return &resources{
 		sync.Mutex{},
 		resetPeriod,
-		make(map[string]record),
+		make(map[resourcePath]record),
 	}
 }
 
-func (r *resources) increment(uri string) {
+func (r *resources) increment(uri resourcePath) {
 	now := time.Now().UTC()
 	r.Lock()
 	defer r.Unlock()
@@ -36,7 +36,7 @@ func (r *resources) increment(uri string) {
 	r.records[uri] = rec
 }
 
-func (r *resources) get(uri string) record {
+func (r *resources) get(uri resourcePath) record {
 	now := time.Now().UTC()
 	r.Lock()
 	defer r.Unlock()

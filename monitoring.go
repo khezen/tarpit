@@ -2,6 +2,10 @@ package tarpit
 
 import "time"
 
+type ipAddress string
+
+type resourcePath string
+
 // Record -
 type record struct {
 	count    int
@@ -20,7 +24,7 @@ func newMonitoring(resetPeriod time.Duration) monitoring {
 	}
 }
 
-func (m *monitoring) get(ip, uri string) record {
+func (m *monitoring) get(ip ipAddress, uri resourcePath) record {
 	resources := m.records.get(ip)
 	if resources == nil {
 		return record{}
@@ -28,7 +32,7 @@ func (m *monitoring) get(ip, uri string) record {
 	return resources.get(uri)
 }
 
-func (m *monitoring) increment(ip, uri string) {
+func (m *monitoring) increment(ip ipAddress, uri resourcePath) {
 	resources := m.records.get(ip)
 	if resources == nil {
 		resources := newResources(m.resetPeriod)

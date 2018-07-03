@@ -17,24 +17,22 @@ type Interface interface {
 // The tarpit sends one byte of response every chunkPeriod to keep the client from timing out;
 // you can disable this feature by setting chunkPeriod to <= 0;
 // Once a given resources is not called from a given IP for more than resetPeriod, then the delay is reset.
-func New(delay, chunkPeriod, resetPeriod time.Duration) Interface {
+func New(delay, resetPeriod time.Duration) Interface {
 	tarpit := tarpit{
-		unitDelay:   delay,
-		chunkPeriod: chunkPeriod,
-		isClosed:    false,
-		close:       make(chan struct{}),
-		monitoring:  newMonitoring(resetPeriod),
+		unitDelay:  delay,
+		isClosed:   false,
+		close:      make(chan struct{}),
+		monitoring: newMonitoring(resetPeriod),
 	}
 	go tarpit.monitoring.cleaner(defaultCleanupPeriod, tarpit.close)
 	return &tarpit
 }
 
 type tarpit struct {
-	unitDelay   time.Duration
-	chunkPeriod time.Duration
-	isClosed    bool
-	close       chan struct{}
-	monitoring  monitoring
+	unitDelay  time.Duration
+	isClosed   bool
+	close      chan struct{}
+	monitoring monitoring
 }
 
 func (t *tarpit) Tar(w http.ResponseWriter, r *http.Request) error {
@@ -49,25 +47,9 @@ func (t *tarpit) Tar(w http.ResponseWriter, r *http.Request) error {
 	if remainingDuration == 0 {
 		return nil
 	}
-	con, _, err := hijack(w)
-	if err != nil {
-		return err
-	}
-	var timer *time.Timer
-	for {
-		if t.chunkPeriod > 0 && remainingDuration > t.chunkPeriod {
-			timer = time.NewTimer(t.chunkPeriod)
-		} else {
-			timer = time.NewTimer(remainingDuration)
-		}
-		<-timer.C
-		remainingDuration = remainingDuration - t.chunkPeriod
-		if remainingDuration <= 0 {
-			return nil
-		}
-		// write a byte to prevent client timeout
-		con.Write([]byte(" "))
-	}
+	timer := time.NewTimer(remainingDuration)
+	<-timer.C
+	return nil
 }
 
 func (t *tarpit) Close() {
