@@ -28,8 +28,6 @@ const (
 
 // New creates a new tarpit interface - delay is the unit period used to delay incoming connections.
 // Repeted calls to the same resource from the same IP multiply this value;
-// The tarpit sends one byte of response every chunkPeriod to keep the client from timing out;
-// you can disable this feature by setting chunkPeriod to <= 0;
 // Once a given resources is not called from a given IP for more than resetPeriod, then the delay is reset.
 func New(delay, resetPeriod time.Duration) Interface {
 	tarpit := tarpit{
