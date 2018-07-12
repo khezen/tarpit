@@ -30,7 +30,7 @@ type Interface interface {
 
 // New creates a new tarpit interface - delay is the unit period used to delay incoming connections.
 // Repeted calls to the same resource from the same IP multiply the {delay};
-// The delay is apply when more than {freeCallsCount} repeted calls to a given resources;
+// The delay is apply after more than {freeCallsCount} repeted calls to a given resources;
 // Once a given resources is not called from a given IP for more than {resetPeriod}, then the delay is reset.
 func New(freeCallsCount int, delay, resetPeriod time.Duration) Interface {
 	tarpit := tarpit{
