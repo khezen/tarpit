@@ -19,7 +19,7 @@ import (
     "github.com/khezen/tarpit"
 )
 
-var tarpitMiddleware = tarpit.New(tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
+var tarpitMiddleware = tarpit.New(tarpit.DefaultFreeCallsCount, tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
 
 func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
       if r.Method != http.MethodGet{
