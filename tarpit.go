@@ -11,48 +11,18 @@
 // The following example applies tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
 //
 // `
-//
-// package main
-//
-// import (
-//     "net/http"
-//     "github.com/khezen/tarpit"
-// )
-//
-// var tarpitMiddleware = tarpit.New(tarpit.DefaultFreeCallsCount, tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
-//
-// func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
-//       if r.Method != http.MethodGet{
-//          w.WriteHeader(http.StatusMethodNotAllowed)
-//          return
-//     }
-//     w.Write([]byte("OK"))
+// if r.Method != http.MethodGet{
+// 		w.WriteHeader(http.StatusMethodNotAllowed)
+// 		return
 // }
-//
-// func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
-//     if r.Method != http.MethodGet{
-//          w.WriteHeader(http.StatusMethodNotAllowed)
-//          return
-//     }
-//     ipAddr := r.Header.Get(httpHeaderXForwardedFor)
-//     err := tarpitMiddleware.Tar(ipAddr, w, r)
-//     if err != nil {
-//         w.WriteHeader(http.StatusInternalServerError)
-//         w.Write([]byte(err.Error()))
-//         return
-//     }
-//     w.Write([]byte("Here are your pills"))
+// ipAddr := r.Header.Get(httpHeaderXForwardedFor)
+// err := tarpitMiddleware.Tar(ipAddr, w, r)
+// if err != nil {
+// 	w.WriteHeader(http.StatusInternalServerError)
+// 	w.Write([]byte(err.Error()))
+// 	return
 // }
-//
-// func main() {
-//     http.HandleFunc("/drugs-store/v1/health", handleHealthCheck)
-//     http.HandleFunc("/drugs-store/v1/medicine", handleGetMedicine)
-//     writeTimeout := 30*time.Second
-//     err := tarpit.ListenAndServe(":80", nil, writeTimeout)
-//     if err != nil {
-//         panic(err)
-//     }
-// }
+// w.Write([]byte("Here are your pills"))
 // `
 package tarpit
 
