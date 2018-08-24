@@ -37,7 +37,7 @@
 // 			w.Write([]byte(err.Error()))
 // 			return
 // 		}
-// 		w.Write([]byte("Here are your pills"))
+// 		w.Write([]byte("Here is your medicine"))
 // 	}
 //
 // 	func main() {
