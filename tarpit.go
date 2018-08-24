@@ -6,7 +6,7 @@
 
 // ## example
 
-// The following example apply tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
+// The following example applies tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
 
 // ```golang
 
