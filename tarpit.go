@@ -54,7 +54,6 @@
 //     }
 // }
 // ```
-
 package tarpit
 
 import (
