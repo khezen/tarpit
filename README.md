@@ -10,6 +10,8 @@ One typical use case is to protect authentication from brute force.
 
 ## example
 
+The following example apply tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
+
 ```golang
 
 package main
@@ -34,7 +36,8 @@ func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
          w.WriteHeader(http.StatusMethodNotAllowed)
          return
     }
-    err := tarpitMiddleware.Tar(w, r)
+    ipAddr := r.Header.Get(httpHeaderXForwardedFor)
+    err := tarpitMiddleware.Tar(ipAddr, w, r)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(err.Error()))
@@ -46,7 +49,7 @@ func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
 func main() {
     http.HandleFunc("/drugs-store/v1/health", handleHealthCheck)
     http.HandleFunc("/drugs-store/v1/medicine", handleGetMedicine)
-    writeTimeout := time.Hour
+    writeTimeout := 30*time.Second
     err := tarpit.ListenAndServe(":80", nil, writeTimeout)
     if err != nil {
         panic(err)

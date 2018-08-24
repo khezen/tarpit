@@ -9,14 +9,6 @@ const (
 	httpHeaderXForwardedFor = "X-Forwarded-For"
 )
 
-func getCallerIP(r *http.Request) ipAddress {
-	ipAddr := r.Header.Get(httpHeaderXForwardedFor)
-	if ipAddr != "" {
-		return ipAddress(ipAddr)
-	}
-	return ipAddress(r.RemoteAddr)
-}
-
 func getURI(r *http.Request) resourcePath {
 	return resourcePath(r.URL.Path)
 }
