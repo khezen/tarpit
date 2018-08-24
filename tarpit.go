@@ -79,7 +79,7 @@ var (
 )
 
 // Interface -
-// call Tar(w http.ResponseWriter, r *http.Request) to slow down repeted connection to the same resource.
+// call Tar(key string, w http.ResponseWriter, r *http.Request) to slow down repeted connection to the same resource.
 type Interface interface {
 	Tar(key string, w http.ResponseWriter, r *http.Request) error
 	Close()
