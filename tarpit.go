@@ -1,24 +1,26 @@
+// Package tarpit
+//
 // * simple HTTP middleware that purposely delays incoming connections
 // * repeted calls to a given resource increase the delay
 // * enable TCP keep alive to keep the client from timing out
-
+//
 // One typical use case is to protect authentication from brute force.
-
+//
 // ## example
-
+//
 // The following example applies tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
-
+//
 // ```golang
-
+//
 // package main
-
+//
 // import (
 //     "net/http"
 //     "github.com/khezen/tarpit"
 // )
-
+//
 // var tarpitMiddleware = tarpit.New(tarpit.DefaultFreeCallsCount, tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
-
+//
 // func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
 //       if r.Method != http.MethodGet{
 //          w.WriteHeader(http.StatusMethodNotAllowed)
@@ -26,7 +28,7 @@
 //     }
 //     w.Write([]byte("OK"))
 // }
-
+//
 // func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
 //     if r.Method != http.MethodGet{
 //          w.WriteHeader(http.StatusMethodNotAllowed)
@@ -41,7 +43,7 @@
 //     }
 //     w.Write([]byte("Here are your pills"))
 // }
-
+//
 // func main() {
 //     http.HandleFunc("/drugs-store/v1/health", handleHealthCheck)
 //     http.HandleFunc("/drugs-store/v1/medicine", handleGetMedicine)
