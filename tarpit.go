@@ -1,12 +1,10 @@
 // Package tarpit
 //
-// * simple HTTP middleware that purposely delays incoming connections
-// * repeted calls to a given resource increase the delay
-// * enable TCP keep alive to keep the client from timing out
+// Simple HTTP middleware that purposely delays incoming connections.
+// Repeted calls to a given resource increase the delay.
+// Enables TCP keep alive to keep the client from timing out.
 //
 // One typical use case is to protect authentication from brute force.
-//
-// ## example
 //
 // The following example applies tarpit based on IP address. It is possible to apply tarpit based on any data provided in the request.
 //
