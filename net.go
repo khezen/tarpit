@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-const (
-	httpHeaderXForwardedFor = "X-Forwarded-For"
-)
-
 func getURI(r *http.Request) resourcePath {
 	return resourcePath(r.URL.Path)
 }
