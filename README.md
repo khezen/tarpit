@@ -2,7 +2,7 @@
 
 [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/khezen/tarpit)
 
-* simple HTTP middleware that purposely delays incoming connections
+* simple HTTP middleware that purposely delays incoming request
 * repeted calls to a given resource increase the delay
 * enable TCP keep alive to keep the client from timing out
 
