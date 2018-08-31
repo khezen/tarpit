@@ -30,7 +30,7 @@
 // 			w.WriteHeader(http.StatusMethodNotAllowed)
 // 			return
 // 		}
-// 		ipAddr := r.Header.Get(httpHeaderXForwardedFor)
+// 		ipAddr := r.Header.Get("X-Forwarded-For")
 // 		err := tarpitMiddleware.Tar(ipAddr, w, r)
 // 		if err != nil {
 // 			w.WriteHeader(http.StatusInternalServerError)
