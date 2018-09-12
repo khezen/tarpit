@@ -53,6 +53,7 @@ package tarpit
 
 import (
 	"errors"
+	"math"
 	"net/http"
 	"time"
 )
@@ -110,10 +111,10 @@ func (t *tarpit) Tar(key string, w http.ResponseWriter, r *http.Request) error {
 	uri := getURI(r)
 	defer t.monitoring.increment(key, uri)
 	calls := t.monitoring.get(key, uri)
-	remainingDuration := time.Duration(calls.count-t.freeCallsCount) * t.unitDelay
-	if remainingDuration <= 0 {
+	if calls.count-t.freeCallsCount <= 0 {
 		return nil
 	}
+	remainingDuration := t.unitDelay * time.Duration(math.Pow(2, float64(calls.count-t.freeCallsCount-1)))
 	timer := time.NewTimer(remainingDuration)
 	<-timer.C
 	return nil
