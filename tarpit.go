@@ -33,7 +33,6 @@
 // 	}
 //
 // 	func main() {
-// 		http.HandleFunc("/drugs-store/v1/health", handleHealthCheck)
 // 		http.HandleFunc("/drugs-store/v1/medicine", handleGetMedicine)
 // 		writeTimeout := 30*time.Second
 // 		err := tarpit.ListenAndServe(":80", nil, writeTimeout)
