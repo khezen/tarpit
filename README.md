@@ -3,7 +3,7 @@
 [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/khezen/tarpit)
 
 * simple HTTP middleware that purposely delays incoming request
-* repeted calls to a given resource increase the delay
+* repeted requests to a given resource increase the delay
 * enable TCP keep alive to keep the client from timing out
 
 One typical use case is to protect authentication from brute force.
@@ -21,7 +21,7 @@ import (
     "github.com/khezen/tarpit"
 )
 
-var tarpitMiddleware = tarpit.New(tarpit.DefaultFreeCallsCount, tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
+var tarpitMiddleware = tarpit.New(tarpit.DefaultFreeReqCount, tarpit.DefaultDelay, tarpit.DefaultResetPeriod)
 
 func handleGetMedicine(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodGet{
