@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-func getURI(r *http.Request) resourcePath {
-	return resourcePath(r.URL.Path)
-}
-
 // ListenAndServe - same as http.ListenAndServe(addr string, handler http.Handler) error
 // unless it adds writeTimeout parameter and ensure tcp keep alive to prevent the client from timing out.
 // Typically writeTimeout takes high value (i.e time.Hour) to ensure the tarpit is effective.

@@ -74,9 +74,9 @@ var (
 )
 
 // Interface -
-// call Tar(key string, w http.ResponseWriter, r *http.Request) to slow down repeted connection to the same resource.
+// call Tar(requester string, w http.ResponseWriter, r *http.Request) to slow down repeted connection to the same resource.
 type Interface interface {
-	Tar(key string, w http.ResponseWriter, r *http.Request) error
+	Tar(requester string, w http.ResponseWriter, r *http.Request) error
 	Close()
 }
 
@@ -104,13 +104,13 @@ type tarpit struct {
 	monitoring     monitoring
 }
 
-func (t *tarpit) Tar(key string, w http.ResponseWriter, r *http.Request) error {
+func (t *tarpit) Tar(requester string, w http.ResponseWriter, r *http.Request) error {
 	if t.isClosed {
 		return ErrClosedTarpit
 	}
-	uri := getURI(r)
-	defer t.monitoring.increment(key, uri)
-	calls := t.monitoring.get(key, uri)
+	uri := resourcePath(r.URL.Path)
+	defer t.monitoring.increment(requester, uri)
+	calls := t.monitoring.get(requester, uri)
 	if calls.count-t.freeCallsCount <= 0 {
 		return nil
 	}

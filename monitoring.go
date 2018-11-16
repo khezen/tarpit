@@ -4,38 +4,37 @@ import "time"
 
 type resourcePath string
 
-// Record -
-type record struct {
+type requests struct {
 	count    int
 	latestAt time.Time
 }
 
 type monitoring struct {
 	resetPeriod time.Duration
-	records     keys
+	requesters  requesters
 }
 
 func newMonitoring(resetPeriod time.Duration) monitoring {
 	return monitoring{
 		resetPeriod: resetPeriod,
-		records:     newstringAddresses(),
+		requesters:  newRequesters(),
 	}
 }
 
-func (m *monitoring) get(key string, uri resourcePath) record {
-	resources := m.records.get(key)
+func (m *monitoring) get(requester string, uri resourcePath) requests {
+	resources := m.requesters.get(requester)
 	if resources == nil {
-		return record{}
+		return requests{}
 	}
 	return resources.get(uri)
 }
 
-func (m *monitoring) increment(key string, uri resourcePath) {
-	resources := m.records.get(key)
+func (m *monitoring) increment(requester string, uri resourcePath) {
+	resources := m.requesters.get(requester)
 	if resources == nil {
 		resources := newResources(m.resetPeriod)
 		resources.increment(uri)
-		m.records.put(key, resources)
+		m.requesters.put(requester, resources)
 	} else {
 		resources.increment(uri)
 	}
@@ -46,7 +45,7 @@ func (m *monitoring) cleaner(cleanupPeriod time.Duration, stop chan struct{}) {
 	for {
 		select {
 		case <-ticker.C:
-			m.records.cleanup()
+			m.requesters.cleanup()
 		case <-stop:
 			return
 		}
