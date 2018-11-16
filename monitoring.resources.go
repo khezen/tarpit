@@ -20,9 +20,9 @@ func newResources(resetPeriod time.Duration) *resources {
 }
 
 func (r *resources) increment(uri resourcePath) {
-	now := time.Now().UTC()
 	r.Lock()
 	defer r.Unlock()
+	now := time.Now().UTC()
 	rqs, ok := r.requests[uri]
 	if !ok {
 		rqs = requests{
@@ -37,9 +37,9 @@ func (r *resources) increment(uri resourcePath) {
 }
 
 func (r *resources) get(uri resourcePath) requests {
-	now := time.Now().UTC()
 	r.Lock()
 	defer r.Unlock()
+	now := time.Now().UTC()
 	rqs, ok := r.requests[uri]
 	if !ok {
 		return requests{}
@@ -56,8 +56,12 @@ func (r *resources) cleanup() (isEmpty bool) {
 	defer r.Unlock()
 	now := time.Now().UTC()
 	isEmpty = true
+	rLen := len(r.requests)
+	if rLen == 0 {
+		return isEmpty
+	}
 	wg := sync.WaitGroup{}
-	wg.Add(len(r.requests))
+	wg.Add(rLen)
 	for uri, rqs := range r.requests {
 		go func(uri resourcePath, rqs requests) {
 			if rqs.latestAt.UnixNano()+int64(r.resetPeriod) <= now.UnixNano() {

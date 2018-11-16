@@ -16,29 +16,39 @@ func newRequesters() requesters {
 	}
 }
 
-func (i *requesters) put(requester string, resources *resources) {
-	i.Lock()
-	defer i.Unlock()
-	i.resources[requester] = resources
+func (r *requesters) put(requester string, resources *resources) {
+	r.Lock()
+	defer r.Unlock()
+	r.resources[requester] = resources
 }
 
-func (i *requesters) get(requester string) *resources {
-	i.RLock()
-	defer i.RUnlock()
-	resources, ok := i.resources[requester]
+func (r *requesters) get(requester string) *resources {
+	r.RLock()
+	defer r.RUnlock()
+	resources, ok := r.resources[requester]
 	if !ok {
 		return nil
 	}
 	return resources
 }
 
-func (i *requesters) cleanup() {
-	i.Lock()
-	defer i.Unlock()
-	for requester, resources := range i.resources {
-		isEmpty := resources.cleanup()
-		if isEmpty {
-			delete(i.resources, requester)
-		}
+func (r *requesters) cleanup() {
+	r.Lock()
+	defer r.Unlock()
+	rLen := len(r.resources)
+	if rLen == 0 {
+		return
 	}
+	wg := sync.WaitGroup{}
+	wg.Add(rLen)
+	for requester, resrcs := range r.resources {
+		go func(requester string, resrcs *resources) {
+			isEmpty := resrcs.cleanup()
+			if isEmpty {
+				delete(r.resources, requester)
+			}
+			wg.Done()
+		}(requester, resrcs)
+	}
+	wg.Wait()
 }
